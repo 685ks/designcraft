@@ -3,6 +3,21 @@
 Start the app with `--control <port>` (or `DESIGNCRAFT_CONTROL_PORT`). The server listens on
 `127.0.0.1` only and speaks JSON lines: one request object per line, one reply per line.
 
+**Authentication.** Each launch makes a random 256-bit token and writes it as 64 hex digits to
+`control-<port>.token` in the settings directory (Linux `~/.config/designcraft/`, macOS
+`~/Library/Application Support/DesignCraft/`, Windows `%APPDATA%\DesignCraft\`, or the
+`DESIGNCRAFT_CONFIG_DIR` / portable data folder), readable by the owner only (mode 0600 on Unix),
+and removes it on exit. The first request on a connection must carry it as a top-level `token`
+field (`{"id":1,"method":"ui.inspect","token":"<hex>"}`); the `auth` method checks it without
+running anything. Later requests on that connection may omit it; a wrong one closes the connection.
+A missing or wrong token gets one `{"ok":false,"error":"unauthorized: …"}` reply and the connection
+closes; nothing reaches the app. `designcraft-cli app`, `script --connect` and `mcp --connect` read
+the file for the port they connect to, or `DESIGNCRAFT_CONTROL_TOKEN` when it is set. Peers that are
+not loopback addresses are refused. If no token can be made or stored, the control server does not
+start. Tests: `apps/designcraft/src/control_server.rs` (`a_request_without_the_token_is_refused_and_not_dispatched`,
+`the_token_on_a_request_authorizes_the_connection`), `crates/mcp/src/backend.rs`
+(`requests_carry_the_control_token`), `crates/engine/src/control_token.rs`.
+
 For an isolated native test profile, set `DESIGNCRAFT_CONFIG_DIR` to a dedicated directory before
 launch. UI/engine preferences and the `Recovery` directory then live under that root. An unset
 override preserves the usual platform paths (or `DesignCraftData` next to the executable when a
@@ -22,8 +37,8 @@ nothing sent after it on that connection runs. That covers text that isn't JSON,
 an object without `method`, invalid UTF-8, and a line longer than 4 MiB. An HTTP request (for example a
 web page's cross-origin `fetch` to `127.0.0.1:<port>`) therefore can't smuggle a command in its body:
 its request line is rejected first. At most 16 connections are served at once; further ones get an error
-line and are closed. Clients that get an error reply should reconnect. The port has no authentication,
-so only enable it while you use it. Transport: `apps/designcraft/src/control_server.rs`.
+line and are closed. Clients that get an error reply should reconnect. Only clients holding the
+launch's token are served (see **Authentication**); still, only enable the port while you use it. Transport: `apps/designcraft/src/control_server.rs`.
 
 ```json
 {"id": 1, "method": "engine.execute", "params": {"command": "frame.create", "params": {"rect": [36, 36, 300, 200], "content": "text"}}}

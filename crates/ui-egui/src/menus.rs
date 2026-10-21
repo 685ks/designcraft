@@ -278,17 +278,13 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
         "{on?: bool, at?: [x, y] (points from the canvas's top-left)} — the Contextual Task Bar stays where it is (or at `at`) instead of following the selection; with neither, toggles",
     ),
     ("window.taskBarReset", "Reset Bar Position", None, "{} — the Contextual Task Bar follows the selection again, under it"),
-    ("help.discord", "Join the ArtCraft Discord…", None, "{} — opens https://discord.gg/artcraft in the browser"),
-    ("help.appPage", "DesignCraft Website…", None, "{} — opens https://getartcraft.com/apps/designcraft"),
-    ("help.github", "DesignCraft on GitHub…", None, "{} — opens https://github.com/storytold/designcraft"),
+    ("help.github", "DesignCraft on GitHub…", None, "{} — opens https://github.com/685ks/designcraft"),
     ("help.issues", "Report an Issue…", None, "{} — opens the GitHub issue tracker"),
-    ("help.website", "ArtCraft Website…", None, "{} — opens https://getartcraft.com"),
-    ("help.app", "ArtCraft App Page…", None, "{app} — opens https://getartcraft.com/apps/{app} (e.g. photocraft)"),
     (
         "help.about",
         "About DesignCraft",
         None,
-        "{open?: true, tab?: \"about\"|\"contributors\"|\"models\"} — the About window: splash with community links, contributor and model credits (open: false closes it)",
+        "{open?: true, tab?: \"about\"|\"contributors\"|\"models\"} — the About window: splash with project links, contributor and model credits (open: false closes it)",
     ),
     ("window.toolsDoubleColumn", "Tools: Double Column", None, "{}"),
     (
@@ -305,7 +301,7 @@ pub const UI_COMMANDS: &[(&str, &str, Option<&str>, &str)] = &[
     ),
     ("window.deleteWorkspace", "Delete Workspace…", None, "{name}"),
     ("window.resetWorkspace", "Reset Workspace", None, "{} — back to the current workspace as saved (or its defaults)"),
-    ("window.brightness", "Interface Color Theme", None, "{brightness: dark|mediumDark|mediumLight|light|highContrast}"),
+    ("window.brightness", "Interface Color Theme", None, "{brightness: house|dark|mediumDark|mediumLight|light|highContrast}"),
 ];
 
 /// Menu bar: (menu, entries). Entries: `cmd:<id>`, `ui:<id>`, `-` separator, `>Submenu` … `<`.
@@ -905,21 +901,7 @@ pub const MENUS: &[(&str, &[&str])] = &[
             "ui:window.brightness",
         ],
     ),
-    (
-        "Help",
-        &[
-            "ui:help.discord",
-            "-",
-            "ui:help.appPage",
-            "ui:help.github",
-            "ui:help.issues",
-            "ui:help.website",
-            "-",
-            "cmd:file.newSample",
-            "-",
-            "ui:help.about",
-        ],
-    ),
+    ("Help", &["ui:help.github", "ui:help.issues", "-", "cmd:file.newSample", "-", "ui:help.about"]),
 ];
 
 /// The built-in workspaces, in InDesign's order.
@@ -1813,14 +1795,6 @@ fn run_ui_inner(app: &mut DesignApp, id: &str, p: &Value) -> Option<Result<Value
             app.ui.about = p.get("open").and_then(Value::as_bool).unwrap_or(true);
             Ok(json!(app.ui.about))
         }
-        "help.app" => match p.get("app").and_then(Value::as_str) {
-            Some(slug) if !slug.is_empty() && slug.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') => {
-                let url = format!("{}/apps/{slug}", designcraft_engine::links::WEBSITE);
-                app.ui.pending_urls.push(url.clone());
-                Ok(json!({"url": url}))
-            }
-            _ => Err("help.app: give `app` (e.g. \"photocraft\")".into()),
-        },
         h if h.starts_with("help.") && designcraft_engine::links::get(&h[5..]).is_some() => {
             let url = designcraft_engine::links::get(&h[5..]).unwrap_or_default().to_string();
             app.ui.pending_urls.push(url.clone());
@@ -1937,7 +1911,7 @@ fn run_ui_inner(app: &mut DesignApp, id: &str, p: &Value) -> Option<Result<Value
             Ok(Value::Null)
         }
         "window.brightness" => {
-            let b = p.get("brightness").and_then(Value::as_str).and_then(crate::theme::Brightness::parse).unwrap_or(crate::theme::Brightness::Dark);
+            let b = p.get("brightness").and_then(Value::as_str).and_then(crate::theme::Brightness::parse).unwrap_or_default();
             app.ui.brightness = b;
             app.restyle = true;
             Ok(Value::Null)
@@ -2295,7 +2269,6 @@ pub enum AppMenuItem {
 /// The macOS application menu. Settings… is `app.preferences`, which `native_menu_tree` leaves out of Edit.
 pub const MAC_APP_MENU: &[AppMenuItem] = &[
     AppMenuItem::Cmd { id: "dc-about", label: "About DesignCraft", command: "help.about" },
-    AppMenuItem::Cmd { id: "dc-discord", label: "Join the ArtCraft Discord…", command: "help.discord" },
     AppMenuItem::Sep,
     AppMenuItem::Cmd { id: "dc-settings", label: "Settings…", command: "app.preferences" },
     AppMenuItem::Sep,

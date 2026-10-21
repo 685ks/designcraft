@@ -3,8 +3,10 @@
 //! Usage: `designcraft [--control <port>] [--sample] [files…]`
 //!
 //! `--control <port>` (or `DESIGNCRAFT_CONTROL_PORT`) starts a localhost JSON-lines control server:
-//! `{"id":1,"method":"ui.inspect","params":{}}` → `{"id":1,"ok":true,"result":…}`.
-//! See `designcraft_ui_egui::control` for the methods.
+//! `{"id":1,"method":"ui.inspect","params":{},"token":"<hex>"}` → `{"id":1,"ok":true,"result":…}`.
+//! The token is made fresh for each launch and written to `<settings dir>/control-<port>.token`
+//! (owner-only); see `designcraft_engine::control_token`. See `designcraft_ui_egui::control` for
+//! the methods.
 //!
 //! The graphics backend (DirectX 12, Vulkan, Metal or OpenGL) and the adapter that draws the
 //! window are chosen in `gpu`, with a fallback for a driver or adapter that fails at start-up;
@@ -46,6 +48,8 @@ struct App {
     /// (`gpu_limits::log_uncaptured_errors`). Until then wgpu's default handler panics, so a
     /// failing adapter still makes `gpu` start again on the next one.
     log_errors_after_startup: Option<eframe::wgpu::Device>,
+    /// This launch's control token file, removed on exit.
+    token_file: Option<std::path::PathBuf>,
 }
 
 impl eframe::App for App {
@@ -101,7 +105,25 @@ impl eframe::App for App {
             eprintln!("designcraft: couldn't preserve documents on exit: {e}");
         }
         save_prefs(&self.app);
+        // The control token dies with this launch.
+        if let Some(path) = self.token_file.take() {
+            let _ = std::fs::remove_file(path);
+        }
     }
+}
+
+/// A fresh 256-bit control token, written owner-only to the settings directory for `port`.
+/// Returns the token and its file, or why the control server can't start safely.
+fn control_token(port: u16) -> Result<(String, std::path::PathBuf), String> {
+    use designcraft_engine::control_token as ct;
+    let mut bytes = [0u8; 32];
+    getrandom::fill(&mut bytes).map_err(|e| format!("no secure random numbers for the control token: {e}"))?;
+    let token = ct::to_hex(&bytes);
+    let dir = profile::config_dir()
+        .ok_or("no settings directory for the control token (HOME, XDG_CONFIG_HOME, APPDATA or DESIGNCRAFT_CONFIG_DIR is not set)")?;
+    let path = ct::token_path(&dir, port);
+    ct::write_token(&path, &token).map_err(|e| format!("writing {}: {e}", path.display()))?;
+    Ok((token, path))
 }
 
 /// Tell the macOS input method to drop its composition (the Type tool kept the marked text as
@@ -320,7 +342,7 @@ fn services() -> Services {
 }
 
 /// Desktop app ID: the Linux `.desktop` file name and hicolor icon name (Wayland matches windows by it).
-const APP_ID: &str = "ai.storyteller.designcraft";
+const APP_ID: &str = "app.freedev.ainz.ks.DesignCraft";
 
 /// The window, Dock, taskbar and Alt-Tab icon. macOS gets Apple's icon grid (transparent margin);
 /// elsewhere the full tile. Regenerate with `packaging/icons.sh`.
@@ -328,7 +350,7 @@ fn app_icon() -> Option<egui::IconData> {
     #[cfg(target_os = "macos")]
     let png: &[u8] = include_bytes!("../../../assets/app-icon/designcraft-macos-512.png");
     #[cfg(not(target_os = "macos"))]
-    let png: &[u8] = include_bytes!("../../../assets/app-icon/hicolor/256x256/apps/ai.storyteller.designcraft.png");
+    let png: &[u8] = include_bytes!("../../../assets/app-icon/hicolor/256x256/apps/app.freedev.ainz.ks.DesignCraft.png");
     eframe::icon_data::from_png_bytes(png).map_err(|e| log::warn!("app icon: {e}")).ok()
 }
 
@@ -510,9 +532,20 @@ fn main() -> std::process::ExitCode {
                 }
                 app.integrated_titlebar = cfg!(target_os = "macos");
                 app.custom_titlebar = cfg!(target_os = "windows");
+                let mut token_file = None;
                 if let Some(port) = control_port {
-                    let rx = control_server::start(port, cc.egui_ctx.clone());
-                    app = app.with_control(rx);
+                    match control_token(port) {
+                        Ok((token, path)) => {
+                            log::info!("control token in {}", path.display());
+                            let rx = control_server::start(port, std::sync::Arc::from(token), cc.egui_ctx.clone());
+                            app = app.with_control(rx);
+                            token_file = Some(path);
+                        }
+                        Err(e) => {
+                            log::error!("control server not started: {e}");
+                            eprintln!("designcraft: control server not started: {e}");
+                        }
+                    }
                 }
                 if sample {
                     let _ = app.run("file.newSample", serde_json::json!({}));
@@ -535,6 +568,7 @@ fn main() -> std::process::ExitCode {
                     movable: None,
                     frames: 0,
                     log_errors_after_startup: device,
+                    token_file,
                 }))
             }),
         )

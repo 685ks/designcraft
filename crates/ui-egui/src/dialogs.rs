@@ -9095,7 +9095,11 @@ mod tests {
             for _ in 0..3 {
                 dialog_frame(&mut app, &ctx, screen, vec![]);
             }
-            let height = visible_label(&dialog_frame(&mut app, &ctx, screen, vec![]), screen, "66p1");
+            // With craft-fonts' Arabic face the taller lines can start the field just below the fold
+            // of the smallest window: it is reached by scrolling the area that paints it.
+            let labels = dialog_frame(&mut app, &ctx, screen, vec![]);
+            let (_, _, clip) = labels.iter().find(|(text, _, _)| text.trim() == "66p1").unwrap_or_else(|| panic!("66p1 is painted"));
+            let height = scroll_to_label(&mut app, &ctx, screen, clip.intersect(screen).center(), "66p1");
             click_dialog(&mut app, &ctx, screen, height.center());
             dialog_frame(
                 &mut app,
