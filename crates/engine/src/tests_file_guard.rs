@@ -21,6 +21,10 @@ use std::path::{Path, PathBuf};
 const ALLOWED: &[(&str, &str)] = &[
     ("engine/src/io.rs", "the checked gateway: every read and write a command makes"),
     ("engine/src/file_access.rs", "the root check itself (resolves links with the file system)"),
+    (
+        "engine/src/control_token.rs",
+        "the control port's per-launch token file in the settings folder: written owner-only and read by the app's own clients, never a document path",
+    ),
     ("engine/src/atomic.rs", "how a write reaches the disk; commands call it only through io::write_file and io::replace_with"),
     (
         "engine/src/recovery.rs",

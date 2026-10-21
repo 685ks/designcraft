@@ -1,13 +1,13 @@
 # User docs: rules for agents and contributors
 
-Everything in this folder (except this file, CLAUDE.md and README.md) is published at
-https://getartcraft.com/docs/designcraft. The file path is the URL:
-`troubleshooting/app-closes-at-start.md` → `/docs/designcraft/troubleshooting/app-closes-at-start`.
-Renaming a file breaks links, so add the old path to `redirect_from` when you rename.
+Everything in this folder (except this file, CLAUDE.md and README.md) is the user guide for this
+fork of storytold/designcraft. The file path is the page's path:
+`troubleshooting/app-closes-at-start.md` → `troubleshooting/app-closes-at-start`. Renaming a file
+breaks links, so add the old path to `redirect_from` when you rename.
 
 ## Who reads this
 
-Artists and designers using DesignCraft, Discord mods answering them, and AI assistants looking things up for
+Artists and designers using DesignCraft, people answering their questions, and AI assistants looking things up for
 either. Write for an artist, not a developer.
 
 ## Page rules
@@ -18,11 +18,11 @@ either. Write for an artist, not a developer.
 - Link to other pages instead of repeating them. Use relative links to the `.md` file:
   `[Install DesignCraft](../getting-started/install.md)`.
 - No marketing copy, no "simply", no claims you have not checked in the code or a release.
-- Call the product "DesignCraft", as the app, its downloads and getartcraft.com do.
+- Call the product "DesignCraft", as the app and its downloads do.
 - Name UI labels exactly as the app shows them, in **bold**.
 - Document Windows 11 only. Do not name older Windows versions.
 - Troubleshooting pages: `## Symptoms`, `## Fix`, `## Why this happens` (optional),
-  `## Still stuck?` (link the issue tracker or Discord).
+  `## Still stuck?` (link the issue tracker).
 
 ## Frontmatter
 
@@ -51,12 +51,10 @@ drafts and are not published.
 
 ## Check before you push
 
-    node <path to your artcraft-services checkout>/frontend/apps/artcraft-website-next/scripts/docs/core.mjs docs/user
-
-The checker lives in storytold/artcraft-services. A CI check will be added once it is on that repo's main branch.
+Check that the front matter is complete and every link resolves.
 
 ## Support PRs
 
 Pages written to answer a user question come in as PRs titled `docs(support): <page title>`.
 Review them like code: check every claim against the source. Questions and bugs go to
-https://github.com/storytold/designcraft/issues.
+https://github.com/685ks/designcraft/issues.

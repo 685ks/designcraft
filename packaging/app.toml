@@ -1,0 +1,13 @@
+# Packaging metadata read by the shared release workflow
+# (685ks/craft-actions/.github/workflows/release-rust-app.yml, called from
+# .github/workflows/release.yml). Asset names: designcraft-<version>-<os>-<arch>[-portable].<ext>.
+id = "designcraft"
+display_name = "DesignCraft"
+bundle_id = "app.freedev.ainz.ks.DesignCraft"
+publisher = "Arthavan Projects"
+description = "A fast, open-source page-layout app: lay out magazines, books and print documents, with IDML, PDF and EPUB"
+categories = ["Graphics", "Publishing"]
+icon_png = "assets/app-icon/hicolor/512x512/apps/app.freedev.ainz.ks.DesignCraft.png"
+icon_icns = "assets/app-icon/designcraft.icns"
+icon_ico = "assets/app-icon/designcraft.ico"
+license = "MIT OR Apache-2.0"

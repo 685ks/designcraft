@@ -1,4 +1,8 @@
-//! Design tokens (InDesign's four interface brightness levels), fonts and egui style.
+//! Design tokens, fonts and egui style.
+//!
+//! The house theme (the default) is the Arthavan Projects design system, filled from the shared
+//! `craft-tokens` crate: steel-blue accent on near-black, with the pasteboard the neutral `--bg`.
+//! The four InDesign-style brightness levels and High Contrast stay as alternates.
 
 use std::sync::Arc;
 
@@ -7,8 +11,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Brightness {
-    Dark,
+    /// The house theme ([`Tokens::house`]), the default.
     #[default]
+    House,
+    Dark,
     MediumDark,
     MediumLight,
     Light,
@@ -17,9 +23,11 @@ pub enum Brightness {
 }
 
 impl Brightness {
-    pub const ALL: [Brightness; 5] = [Brightness::Dark, Brightness::MediumDark, Brightness::MediumLight, Brightness::Light, Brightness::HighContrast];
+    pub const ALL: [Brightness; 6] =
+        [Brightness::House, Brightness::Dark, Brightness::MediumDark, Brightness::MediumLight, Brightness::Light, Brightness::HighContrast];
     pub fn label(self) -> &'static str {
         match self {
+            Brightness::House => "Arthavan Dark",
             Brightness::Dark => "Dark",
             Brightness::MediumDark => "Medium Dark",
             Brightness::MediumLight => "Medium Light",
@@ -29,6 +37,7 @@ impl Brightness {
     }
     pub fn id(self) -> &'static str {
         match self {
+            Brightness::House => "house",
             Brightness::Dark => "dark",
             Brightness::MediumDark => "mediumDark",
             Brightness::MediumLight => "mediumLight",
@@ -135,6 +144,7 @@ impl Tokens {
             caption_close_text: Color32::WHITE,
         };
         match b {
+            Brightness::House => Tokens::house(),
             Brightness::Dark => dark,
             // Measured from InDesign 2026 (plan/indesign/11-observed-ui.md §1).
             Brightness::MediumDark => Tokens {
@@ -499,6 +509,53 @@ pub fn semibold(size: f32) -> FontId {
     FontId::new(size, FontFamily::Name("semibold".into()))
 }
 
+impl Tokens {
+    /// The house theme: the shared design tokens (`craft-tokens`), mapped as the design system's
+    /// ADOPTION guide (section 2) says. Translucent web surfaces are flattened onto the opaque
+    /// panel, since egui can't blur what is behind it. The pasteboard stays the neutral `--bg`.
+    pub fn house() -> Self {
+        use craft_tokens::{Rgba, color as c};
+        let card = c::SURFACE_PANEL.over(c::BG_BASE);
+        let on_card = |x: Rgba| Color32::from(x.over(card));
+        let white = |alpha: f32| on_card(Rgba::rgb(255, 255, 255).with_alpha(alpha));
+        let dark = Tokens::for_brightness(Brightness::Dark);
+        Tokens {
+            dark: true,
+            app_bar: c::BG_SHEET.into(),
+            panel: card.into(),
+            panel_darker: c::BG_SKY_BOTTOM.into(),
+            input: c::BG_BASE.into(),
+            input_border: white(0.18),
+            divider: c::BG_BASE.into(),
+            text: c::TEXT_STRONG.into(),
+            text_strong: c::TEXT_INK.into(),
+            text_dim: c::TEXT_MUTED.into(),
+            text_disabled: white(0.28),
+            icon: c::TEXT_STRONG.into(),
+            hover: on_card(c::SURFACE_FILL_FOCUS),
+            tool_active: c::BG_BASE.into(),
+            accent: c::ACCENT_BASE.into(),
+            accent_strong: c::ACCENT_LOW.into(),
+            row_selected: on_card(c::ACCENT_BASE.with_alpha(0.22)),
+            pasteboard: c::BG_BASE.into(),
+            ruler: white(0.06),
+            ruler_tick: c::TEXT_MUTED.into(),
+            tab_inactive: c::BG_SHEET.into(),
+            button: white(0.09),
+            radius: craft_tokens::radius::XS as u8,
+            border: c::BG_BASE.into(),
+            field_border: c::TEXT_FAINT.into(),
+            well: c::BG_BASE.into(),
+            well_rim: on_card(c::BORDER_LINE),
+            ruler_text: c::TEXT_STRONG.into(),
+            section_divider: c::BG_SHEET.into(),
+            tab_strip: c::BG_SHEET.into(),
+            // On-canvas affordances (the live-corner widget's yellow, guides) keep their colours.
+            ..dark
+        }
+    }
+}
+
 pub fn apply(ctx: &egui::Context, t: &Tokens) {
     ctx.data_mut(|d| d.insert_temp(egui::Id::NULL, *t));
     let text_styles: std::collections::BTreeMap<TextStyle, FontId> = [
@@ -795,5 +852,46 @@ mod russian_font_tests {
                 assert_ne!(face.glyph_for(*character), 0, "missing {character} in {name}");
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod house_tests {
+    use super::*;
+
+    fn contrast(a: Color32, b: Color32) -> f32 {
+        let lum = |c: Color32| {
+            let ch = |v: u8| {
+                let v = f32::from(v) / 255.0;
+                if v <= 0.040_45 { v / 12.92 } else { ((v + 0.055) / 1.055).powf(2.4) }
+            };
+            0.2126 * ch(c.r()) + 0.7152 * ch(c.g()) + 0.0722 * ch(c.b())
+        };
+        let (x, y) = (lum(a), lum(b));
+        (x.max(y) + 0.05) / (x.min(y) + 0.05)
+    }
+
+    #[test]
+    fn the_house_theme_is_the_default_and_comes_from_craft_tokens() {
+        assert_eq!(Brightness::default(), Brightness::House);
+        assert_eq!(Brightness::ALL[0], Brightness::House);
+        assert_eq!(Brightness::parse("house"), Some(Brightness::House));
+        assert_eq!(Brightness::parse("Arthavan Dark"), Some(Brightness::House));
+        let t = Tokens::for_brightness(Brightness::House);
+        assert!(t.dark);
+        // Values from the design system (tokens.json), not hand-picked.
+        assert_eq!(t.accent, Color32::from_rgb(0x8f, 0xb8, 0xd8), "steel-blue accent");
+        assert_eq!(t.app_bar, Color32::from_rgb(0x0b, 0x0e, 0x14));
+        assert_eq!(t.pasteboard, Color32::from_rgb(0x07, 0x09, 0x0d), "the pasteboard is the neutral --bg");
+        assert_eq!(t.panel, Color32::from_rgb(0x0c, 0x0f, 0x15), "--panel flattened onto --bg");
+        assert_eq!(t.text_strong, Color32::from_rgb(0xef, 0xfc, 0xff));
+        for bg in [t.app_bar, t.panel, t.panel_darker, t.input, t.hover, t.row_selected, t.button, t.tab_strip, t.tab_inactive] {
+            assert_eq!(bg.a(), 255, "house surfaces are opaque: {bg:?}");
+            assert!(contrast(t.text, bg) >= 4.5, "text on {bg:?}");
+            assert!(contrast(t.text_dim, bg) >= 4.5, "dim text on {bg:?}");
+            assert!(contrast(t.accent, bg) >= 4.5, "accent on {bg:?}");
+        }
+        assert!(contrast(t.text_strong, t.accent_strong) >= 4.5, "selected text on the selection");
+        assert!(contrast(t.field_border, t.input) >= 3.0 && contrast(t.field_border, t.panel) >= 3.0, "field outlines");
     }
 }

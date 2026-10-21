@@ -830,6 +830,11 @@ version = "0.1.0"
 source = "git+https://github.com/storytold/craft-libs?rev=82a24b006eefa036b43c09a67fb9a3fbd17ffe63#82a24b006eefa036b43c09a67fb9a3fbd17ffe63"
 
 [[package]]
+name = "craft-fonts-build"
+version = "0.1.0"
+source = "git+https://github.com/685ks/craft-fonts?rev=f28afbb766ccddc9cfd136b8cf0b451a24149e1b#f28afbb766ccddc9cfd136b8cf0b451a24149e1b"
+
+[[package]]
 name = "craft-pdf"
 version = "0.1.0"
 source = "git+https://github.com/storytold/craft-libs?rev=89dcbb3060377a26c99a6d80caa16084366704c4#89dcbb3060377a26c99a6d80caa16084366704c4"
@@ -848,6 +853,14 @@ version = "0.1.0"
 source = "git+https://github.com/storytold/craft-libs?rev=d991bf6792f8ade99c51358bf3c1d902c8cd96b5#d991bf6792f8ade99c51358bf3c1d902c8cd96b5"
 dependencies = [
  "tempfile",
+]
+
+[[package]]
+name = "craft-tokens"
+version = "0.1.0"
+source = "git+https://github.com/685ks/craft-libs?tag=v0.1.0#5b1852d2a611b6161827babecc71e27c214af95f"
+dependencies = [
+ "egui",
 ]
 
 [[package]]
@@ -941,6 +954,7 @@ dependencies = [
  "eframe",
  "egui",
  "fmv-macos-events",
+ "getrandom 0.3.4",
  "log",
  "muda",
  "objc2 0.6.4",
@@ -1066,6 +1080,7 @@ name = "designcraft-fonts"
 version = "0.10.0"
 dependencies = [
  "core-text",
+ "craft-fonts-build",
  "harfrust 0.13.3",
  "kurbo",
  "log",
@@ -1225,6 +1240,7 @@ dependencies = [
 name = "designcraft-ui-egui"
 version = "0.10.0"
 dependencies = [
+ "craft-tokens",
  "craft-ui",
  "designcraft-color",
  "designcraft-compose",

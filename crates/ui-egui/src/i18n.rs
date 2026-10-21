@@ -1503,11 +1503,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
         "Apply Parent to Pages…",
         ["Apply Parent to Pages…", "Appliquer le gabarit aux pages…", "Apply Parent to Pages…", "Apply Parent to Pages…", "将主页应用于页面…"],
     ),
-    (
-        "ArtCraft App Page…",
-        ["ArtCraft App Page…", "Page de l'application ArtCraft…", "ArtCraft App Page…", "ArtCraft App Page…", "ArtCraft 应用页面…"],
-    ),
-    ("ArtCraft Website…", ["ArtCraft Website…", "Site web d'ArtCraft…", "ArtCraft Website…", "ArtCraft Website…", "ArtCraft 网站…"]),
     ("Attributes", ["Attributes", "Attributs", "Attributes", "Attributes", "属性"]),
     ("Bevel and Emboss", ["Bevel and Emboss", "Biseautage et estampage", "Bevel and Emboss", "Bevel and Emboss", "斜面和浮雕"]),
     ("Buttons", ["Buttons", "Boutons", "Buttons", "Buttons", "按钮"]),
@@ -1654,10 +1649,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
         ["Delete Text Variable", "Supprimer la variable de texte", "Delete Text Variable", "Delete Text Variable", "删除文本变量"],
     ),
     ("Delete Workspace…", ["Delete Workspace…", "Supprimer l'espace de travail…", "Delete Workspace…", "Delete Workspace…", "删除工作区…"]),
-    (
-        "DesignCraft Website…",
-        ["DesignCraft Website…", "Site web de DesignCraft…", "DesignCraft Website…", "DesignCraft Website…", "DesignCraft 网站…"],
-    ),
     (
         "DesignCraft on GitHub…",
         ["DesignCraft on GitHub…", "DesignCraft sur GitHub…", "DesignCraft on GitHub…", "DesignCraft on GitHub…", "DesignCraft 在 GitHub 上…"],
@@ -1851,16 +1842,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
     (
         "Interface Color Theme",
         ["Interface Color Theme", "Thème de couleur de l'interface", "Interface Color Theme", "Interface Color Theme", "界面颜色主题"],
-    ),
-    (
-        "Join the ArtCraft Discord…",
-        [
-            "Join the ArtCraft Discord…",
-            "Rejoindre le Discord d'ArtCraft…",
-            "Join the ArtCraft Discord…",
-            "Join the ArtCraft Discord…",
-            "加入 ArtCraft Discord…",
-        ],
     ),
     ("Last Object Below", ["Last Object Below", "Dernier objet en dessous", "Last Object Below", "Last Object Below", "下方最后一个对象"]),
     ("Library Contents", ["Library Contents", "Contenu de la bibliothèque", "Library Contents", "Library Contents", "库内容"]),
@@ -2472,16 +2453,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
     ),
     ("Facing Pages", ["Facing Pages", "Pages en vis-à-vis", "Facing Pages", "Facing Pages", "对页"]),
     ("GREP Styles", ["GREP Styles", "Styles GREP", "GREP Styles", "GREP Styles", "GREP 样式"]),
-    (
-        "Get help, share your layouts and shape what we build next.",
-        [
-            "Get help, share your layouts and shape what we build next.",
-            "Obtenez de l'aide, partagez vos mises en page et influencez ce que nous construirons ensuite.",
-            "Get help, share your layouts and shape what we build next.",
-            "Get help, share your layouts and shape what we build next.",
-            "获取帮助，分享您的布局，共同塑造我们的未来。",
-        ],
-    ),
     ("Highlight", ["Highlight", "Surlignage", "Highlight", "Highlight", "高亮显示"]),
     (
         "Hyperlinks & Cross-References",
@@ -2496,20 +2467,9 @@ const TABLE: &[(&str, [&str; 5])] = &[
     ("Hyphens and Dashes", ["Hyphens and Dashes", "Traits d'union et tirets", "Hyphens and Dashes", "Hyphens and Dashes", "连字符和破折号"]),
     ("Interactive", ["Interactive", "Interactif", "Interactive", "Interactive", "交互式"]),
     ("Invert", ["Invert", "Inverser", "Invert", "Invert", "反相"]),
-    (
-        "Join the ArtCraft community",
-        [
-            "Join the ArtCraft community",
-            "Rejoindre la communauté ArtCraft",
-            "Join the ArtCraft community",
-            "Join the ArtCraft community",
-            "加入 ArtCraft 社区",
-        ],
-    ),
     ("Keyboard Increments", ["Keyboard Increments", "Incréments au clavier", "Keyboard Increments", "Keyboard Increments", "键盘增量"]),
     ("Liquid guides", ["Liquid guides", "Repères liquides", "Liquid guides", "Liquid guides", "自适应参考线"]),
     ("Markers", ["Markers", "Marqueurs", "Markers", "Markers", "标记"]),
-    ("More ArtCraft apps", ["More ArtCraft apps", "Autres applications ArtCraft", "More ArtCraft apps", "More ArtCraft apps", "更多 ArtCraft 应用"]),
     ("Nested Line Styles", ["Nested Line Styles", "Styles de ligne imbriqués", "Nested Line Styles", "Nested Line Styles", "嵌套行样式"]),
     ("Nested Styles", ["Nested Styles", "Styles imbriqués", "Nested Styles", "Nested Styles", "嵌套样式"]),
     (
@@ -2634,16 +2594,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
         ],
     ),
     ("Page · PPI", ["Page · PPI", "Page · PPP", "Page · PPI", "Page · PPI", "页面 · PPI"]),
-    (
-        "Part of the ArtCraft suite of open creative tools.",
-        [
-            "Part of the ArtCraft suite of open creative tools.",
-            "Fait partie de la suite ArtCraft d'outils créatifs ouverts.",
-            "Part of the ArtCraft suite of open creative tools.",
-            "Part of the ArtCraft suite of open creative tools.",
-            "ArtCraft 开源创意工具套件的一部分。",
-        ],
-    ),
     ("Pasteboard Options", ["Pasteboard Options", "Options de la table de montage", "Pasteboard Options", "Pasteboard Options", "粘贴板选项"]),
     ("Paths", ["Paths", "Tracés", "Paths", "Paths", "路径"]),
     (
@@ -2823,16 +2773,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
             "[None] — choose a colour on the ramp.",
             "[None] — choose a colour on the ramp.",
             "[无] — 在色带上选择一种颜色。",
-        ],
-    ),
-    (
-        "discord.gg/artcraft — help, feedback and show-and-tell",
-        [
-            "discord.gg/artcraft — help, feedback and show-and-tell",
-            "discord.gg/artcraft : aide, retours et présentation de vos créations",
-            "discord.gg/artcraft — help, feedback and show-and-tell",
-            "discord.gg/artcraft — help, feedback and show-and-tell",
-            "discord.gg/artcraft — 帮助、反馈和展示",
         ],
     ),
     (
@@ -3744,7 +3684,6 @@ const TABLE: &[(&str, [&str; 5])] = &[
         "Include Stroke Weight",
         ["Include Stroke Weight", "Inclure l'épaisseur du contour", "Include Stroke Weight", "Include Stroke Weight", "包含描边粗细"],
     ),
-    ("Join our Discord", ["Join our Discord", "Rejoindre notre Discord", "Join our Discord", "Join our Discord", "加入我们的 Discord 社区"]),
     ("Keep Violations", ["Keep Violations", "Infractions d'enchaînement", "Keep Violations", "Keep Violations", "保持选项违规"]),
     (
         "Overprint [Black] Swatch at 100%",
@@ -4945,9 +4884,8 @@ mod tests {
         keys.extend(crate::menus::UI_COMMANDS.iter().map(|(_, label, _, _)| *label));
         // Tool names reach `tr` from the Tools panel.
         keys.extend(designcraft_tools::TOOL_GROUPS.iter().flat_map(|group| group.iter()).map(|tool| tool.label));
-        // So do the About window's tab names, app descriptions and the credits' column and sort labels.
+        // So do the About window's tab names and the credits' column and sort labels.
         keys.extend(crate::about::ABOUT_TABS);
-        keys.extend(crate::about::SIBLINGS.iter().map(|(_, _, what)| *what));
         keys.extend(crate::credits::NameMode::ALL.iter().map(|mode| mode.label()));
         keys.extend(crate::credits::SortKey::ALL.iter().flat_map(|key| [key.label().0, key.label().1]));
         // UI labels passed to `tr` that no other catalog has yet.

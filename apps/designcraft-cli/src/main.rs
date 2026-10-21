@@ -15,7 +15,7 @@
 //! designcraft-cli perf [--pages N] [--frames N] [--chars N] [--images N] [--runs N] [--strict]  # budgets on a synthetic stress document
 //! designcraft-cli bench FILE [--runs N]  # the same measurements on one document
 //! designcraft-cli validate-pdf FILE.pdf    # run the built-in PDF/X-4 conformance checks
-//! designcraft-cli links                   # Discord, website, app page and GitHub links
+//! designcraft-cli links                   # GitHub and issue tracker links
 //! designcraft-cli --version               # print the version
 //! ```
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
@@ -45,7 +45,8 @@ const USAGE: &str = "usage: designcraft-cli run [--in FILE | --sample] [--cmd ID
 const SCRIPT_HELP: &str = r#"usage: designcraft-cli script [FILE|-] [--in FILE | --sample] [--connect PORT] [--save OUT] [--export OUT] [--keep-going]
 
 Runs a command script from FILE (stdin when FILE is `-` or missing), headless or, with
---connect PORT, in the running app (designcraft --control PORT).
+--connect PORT, in the running app (designcraft --control PORT). The app's per-launch control
+token is read from its settings folder (control-PORT.token) or from DESIGNCRAFT_CONTROL_TOKEN.
 
 Script text, one step per line:
   command.id {"param": 1}     also `command.id={json}`, or `command.id` alone
@@ -77,12 +78,7 @@ non-zero exit when a step fails."#;
 
 /// The links line under the usage block.
 fn usage_footer() -> String {
-    format!(
-        "\nCommunity: {}  ·  {}  ·  {}",
-        designcraft_engine::links::DISCORD,
-        designcraft_engine::links::APP_PAGE,
-        designcraft_engine::links::GITHUB
-    )
+    format!("\nProject: {}  ·  {}", designcraft_engine::links::GITHUB, designcraft_engine::links::ISSUES)
 }
 
 /// stdout went away. A reader that stopped early (a closed pipe) ends the program quietly, as
@@ -125,7 +121,7 @@ fn main() -> ExitCode {
         Some("validate-pdf") => report(validate_pdf(args.get(1).map(String::as_str))),
         Some("links") => {
             use designcraft_engine::links::*;
-            outln!("Discord   {DISCORD}\nWebsite   {WEBSITE}\nApp page  {APP_PAGE}\nGitHub    {GITHUB}\nIssues    {ISSUES}");
+            outln!("GitHub    {GITHUB}\nIssues    {ISSUES}");
             ExitCode::SUCCESS
         }
         // Asking for help is not an error: it goes to stdout and succeeds. An unknown command

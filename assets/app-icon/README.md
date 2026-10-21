@@ -22,7 +22,7 @@ transparent margin.
 
 ## Provenance
 
-The owner drew the cat in ArtCraft. The 2880 px drawing, keyed to the three-colour palette, lives
+The upstream project's owner drew the cat. The 2880 px drawing, keyed to the three-colour palette, lives
 outside this repo in craftrules at `assets/app-icons/designcraft/source.png`. It was vectorised with
 craftrules' `assets/logo-options/_tools/vectorize_tile.py`: `designcraft.svg` is traced at 2048 px and
 `designcraft-small.svg` at 1024 px. Design rules: craftrules `standards/icon-design.md`.
@@ -37,12 +37,12 @@ craftrules' `assets/logo-options/_tools/vectorize_tile.py`: `designcraft.svg` is
 | `designcraft-macos-512.png` | Runtime Dock icon on macOS (embedded by `apps/designcraft`) |
 | `designcraft.icns` | macOS bundle icon (`CFBundleIconFile`) |
 | `designcraft.ico` | Windows exe icon, 16–256 px (embedded by `apps/designcraft/build.rs`) |
-| `hicolor/<size>/apps/ai.storyteller.designcraft.png` | Linux icon theme, 16–512 px; the 256 px one is also the runtime window icon on Windows and Linux |
-| `hicolor/scalable/apps/ai.storyteller.designcraft.svg` | Linux scalable icon |
+| `hicolor/<size>/apps/app.freedev.ainz.ks.DesignCraft.png` | Linux icon theme, 16–512 px; the 256 px one is also the runtime window icon on Windows and Linux |
+| `hicolor/scalable/apps/app.freedev.ainz.ks.DesignCraft.svg` | Linux scalable icon |
 | `LICENSE.txt` | MIT OR Apache-2.0 |
 
-The app ID is `ai.storyteller.designcraft`. It's used for the hicolor icon names, the Wayland app ID and
-`packaging/linux/ai.storyteller.designcraft.desktop`.
+The app ID is `app.freedev.ainz.ks.DesignCraft`. It's used for the hicolor icon names, the Wayland app ID and
+`packaging/linux/app.freedev.ainz.ks.DesignCraft.desktop`.
 
 ## Regenerate
 

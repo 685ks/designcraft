@@ -64,7 +64,7 @@ let
   isLinux = stdenv.hostPlatform.isLinux;
 
   # AppStream id: also the desktop file name, and the icon name in share/icons/hicolor.
-  appId = "ai.storyteller.designcraft";
+  appId = "app.freedev.ainz.ks.DesignCraft";
 
   # Libraries the binaries open at run time with dlopen(): nothing links them, so no RPATH points at
   # them. winit loads libwayland-client, libxkbcommon(-x11) and the X11 libraries; wgpu loads the
@@ -200,7 +200,7 @@ rustPlatform.buildRustPackage {
       masters, typography and print output. It ships with designcraft-cli, a headless command runner
       and MCP server for AI agents.
     '';
-    homepage = "https://getartcraft.com/apps/designcraft";
+    homepage = "https://github.com/685ks/designcraft";
     license = with lib.licenses; [
       mit
       asl20
