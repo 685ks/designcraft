@@ -229,7 +229,7 @@ egui frontend is a separate crate, so the UI can be swapped without touching the
 - **Status and milestones:** [ROADMAP.md](ROADMAP.md) (stage: pre-alpha); feature assessment: [`docs/target-app-parity.md`](docs/target-app-parity.md); known gaps: [`docs/gaps.md`](docs/gaps.md)
 - **Contributor and agent rules** (clean-room, asset policy, quality gates): [`AGENTS.md`](AGENTS.md)
 - **Bundled assets:** every one is listed with its licence in [`ASSETS.md`](ASSETS.md)
-- **App icon and colour:** a calico cat in a polka-dot scarf on DesignCraft green `#7bb51c`; see [`assets/app-icon/`](assets/app-icon/README.md)
+- **App icon and colour:** a lime two-page spread on a dark green tile, in the house style; see [`assets/app-icon/`](assets/app-icon/README.md)
 
 ## Downloads
 
