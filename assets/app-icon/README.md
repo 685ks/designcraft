@@ -41,8 +41,7 @@ craftrules' `assets/logo-options/_tools/vectorize_tile.py`: `designcraft.svg` is
 | `hicolor/scalable/apps/app.freedev.ainz.ks.DesignCraft.svg` | Linux scalable icon |
 | `LICENSE.txt` | MIT OR Apache-2.0 |
 
-The app ID is `app.freedev.ainz.ks.DesignCraft`. It's used for the hicolor icon names, the Wayland app ID and
-`packaging/linux/app.freedev.ainz.ks.DesignCraft.desktop`.
+The app ID is `app.freedev.ainz.ks.DesignCraft`. It is used for the hicolor icon names and the Wayland app ID.
 
 ## Regenerate
 
